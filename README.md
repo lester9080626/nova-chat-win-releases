@@ -48,6 +48,24 @@ It is built with **C# / Windows Forms on .NET 10**. By default it runs [Gemma 4 
 
 ## What's New
 
+### v1.4.2
+
+| Area | What changed |
+|---|---|
+| **Dark message boxes** | Confirmations, warnings, and notices use Nova Chat's own dark dialog instead of the light Windows one. Answers, default buttons, and keys (Enter, Esc, Y / N) work as before. |
+| **Dark window chrome** | Dark title bars on the Settings, Chats, and setup windows, and dark scroll bars in the chat window, Settings pages, text boxes, lists, and drop-downs. |
+| **Drop-downs and disabled options** | Drop-down lists are drawn in the app's colors with an accent highlight. Turned-off sections are dimmed but still readable. |
+| **Settings layout** | The version and **Update** button share the row with **Save** and **Cancel**, so the Appearance and Instructions pages fit without scrolling. The Shortcut page reads top to bottom: click-through, show / hide, then the reply shortcuts. |
+| **Status line** | The screen-sharing status sits at the right end of the line under the input box on a small dark pill, so it stays crisp over any background. The listening status and tooltips match. |
+| **Chats window** | The description is no longer cut off, and the list's header corner is dark. |
+
+### v1.4.1
+
+| Area | What changed |
+|---|---|
+| **Public releases** | Installers and portable builds are published to the public [nova-chat-win-releases](https://github.com/lester9080626/nova-chat-win-releases) repository, which is where the in-app updater looks for new versions. |
+| **Alt+Tab** | The chat window is a tool window, so it no longer shows up in Alt+Tab. |
+
 ### v1.4.0
 
 | Area | What changed |
@@ -171,13 +189,22 @@ It is built with **C# / Windows Forms on .NET 10**. By default it runs [Gemma 4 
 
 ## Getting Started
 
-Prebuilt installers (`NovaChat-<version>-win-x64-setup.exe`) and portable `.zip` builds are published at <https://github.com/lester9080626/nova-chat-win-releases/releases>.
+### Download
+
+Every release is published at <https://github.com/lester9080626/nova-chat-win-releases/releases> with two files:
+
+| File | What it is |
+|---|---|
+| `NovaChat-<version>-win-x64-setup.exe` | **The installer (recommended).** Installs for your Windows account only, so no administrator rights are needed, and adds Start menu and optional desktop shortcuts. Uninstall it from **Settings → Apps**. |
+| `NovaChat-<version>-win-x64.zip` | **The installed files, without the installer.** Unzip it anywhere and run `WinFormsApp1.exe`. The in-app updater downloads this file. |
+
+The executable isn't code-signed, so Windows SmartScreen or Defender may warn about it the first time. Choose **More info → Run anyway**, or allow it in **Settings → Privacy & security**.
 
 ### 1. Clone and run
 
 ```bash
-git clone https://github.com/lester9080626/ai-chat-diary-application.git
-cd ai-chat-diary-application
+git clone https://github.com/Lester-Org/ai-companion-win-app.git
+cd ai-companion-win-app
 dotnet run --project WinFormsApp1/WinFormsApp1.csproj
 ```
 
@@ -407,7 +434,7 @@ When `AutoStart` is `false`, the setup window is never shown, because the extern
 ### Project structure
 
 ```
-ai-chat-diary-application/
+ai-companion-win-app/
 ├── README.md
 ├── .gitignore                     # ignores bin/, obj/, .vs/, *.user, *.gguf
 ├── WinFormsApp1.slnx
@@ -609,6 +636,7 @@ The input box's native text and caret are hidden. `PromptTextPainter` redraws th
 - [x] Response source shows the active model name
 - [x] Reply navigation — step through earlier replies with arrow buttons and configurable global shortcuts
 - [x] Activity tracking, daily digest, and AI intent detection
+- [x] Dark theme across every window, dialog, scroll bar, and message box
 
 **Next**
 
@@ -641,6 +669,23 @@ The input box's native text and caret are hidden. `PromptTextPainter` redraws th
 3. Commit and open a pull request.
 
 Please don't commit `.gguf` model files or build output (`bin/`, `obj/`).
+
+### Releasing a new version
+
+Releases are built by `.github/workflows/build-windows.yml`. The version comes from `<Version>` in `WinFormsApp1/WinFormsApp1.csproj`, and the installer script (`installer/installer.iss`) is given the same version by the workflow.
+
+1. Branch `release-X.Y.Z` from `develop`, set `<Version>X.Y.Z</Version>`, add the notes as `release-notes/vX.Y.Z.md`, and update **What's New** above.
+2. Push the branch and run a test build on it:
+   ```bash
+   gh workflow run build-windows.yml --ref release-X.Y.Z
+   ```
+   The run's artifact holds the installer and the zip exactly as they would be released.
+3. Tag the tested commit and push the tag:
+   ```bash
+   git tag vX.Y.Z
+   git push origin vX.Y.Z
+   ```
+   The tag build creates the release `vX.Y.Z` here and in [nova-chat-win-releases](https://github.com/lester9080626/nova-chat-win-releases), and copies the installer, `installer/`, and this README to that repository's `main` branch. It needs the `RELEASES_TOKEN` secret: a token with **Contents: Read and write** access to the public repository.
 
 ## Acknowledgements
 

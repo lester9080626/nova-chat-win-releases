@@ -1,8 +1,14 @@
-; Inno Setup script for Nova Chat 1.4.1
-; Run with Inno Setup Compiler (ISCC.exe) after dotnet publish has produced dist\NovaChat-1.4.1-win-x64\
+; Inno Setup script for Nova Chat
+; Run with Inno Setup Compiler (ISCC.exe) after dotnet publish has produced dist\NovaChat-<version>-win-x64\
+; The build workflow passes the project's version with /DAppVersion=X.Y.Z; the default below is
+; only used when the script is compiled by hand.
+#ifndef AppVersion
+  #define AppVersion "1.4.2"
+#endif
+
 [Setup]
 AppName=Nova Chat
-AppVersion=1.4.1
+AppVersion={#AppVersion}
 AppPublisher=Nova Chat
 AppPublisherURL=https://github.com/lester9080626/nova-chat-win-releases
 AppSupportURL=https://github.com/lester9080626/nova-chat-win-releases/issues
@@ -10,7 +16,7 @@ AppUpdatesURL=https://github.com/lester9080626/nova-chat-win-releases/releases
 DefaultDirName={autopf}\Nova Chat
 DefaultGroupName=Nova Chat
 OutputDir=installer-output
-OutputBaseFilename=NovaChat-1.4.1-win-x64-setup
+OutputBaseFilename=NovaChat-{#AppVersion}-win-x64-setup
 Compression=lzma2/ultra64
 SolidCompression=yes
 ArchitecturesAllowed=x64compatible
@@ -26,7 +32,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
 
 [Files]
-Source: "..\dist\NovaChat-1.4.1-win-x64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
+Source: "..\dist\NovaChat-{#AppVersion}-win-x64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 
 [Icons]
 Name: "{group}\Nova Chat"; Filename: "{app}\WinFormsApp1.exe"
